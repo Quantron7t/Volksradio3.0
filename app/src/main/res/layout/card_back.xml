@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/square_flip_image"
+        android:layout_height="@dimen/square_flip_image"
+        android:layout_gravity="center"
+        android:padding="16dp"
+        android:src="@drawable/volks_back_thumbnail"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/thumbnail_static_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Stream"/>
+        <TextView
+            android:id="@+id/radio_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/ThumbnailTextShadowEffects"
+            android:background="@drawable/textview_rounded_corners"
+            android:padding="6dp"/>
+        <TextView
+            android:id="@+id/thumbnail_static_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Location"/>
+        <TextView
+            android:id="@+id/radio_location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/ThumbnailTextShadowEffects"
+            android:background="@drawable/textview_rounded_corners"
+            android:padding="6dp"/>
+    </LinearLayout>
+
+
+
+</FrameLayout>
