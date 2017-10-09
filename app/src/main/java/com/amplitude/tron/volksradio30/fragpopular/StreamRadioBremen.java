@@ -25,7 +25,7 @@ public class StreamRadioBremen extends Fragment {
     ImageView backOutButton;
 
     LinearLayout LStreamOne,LStreamTwo,LStreamThree,LStreamFour,LStreamFive,LStreamSix,LStreamSeven,
-            LStreamEight,LStreamNine;
+            LStreamEight,LStreamNine,LStreamTen,LStreamEleven,LStreamTwelve;
 
     public StreamRadioBremen(){}
 

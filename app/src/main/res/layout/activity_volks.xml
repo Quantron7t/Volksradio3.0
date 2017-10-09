@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.amplitude.tron.volksradio30.VolksActivity"
-    android:background="@drawable/main_layout_gradient">
+    android:background="@color/mainActivityColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,12 +67,15 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center">
-                <pl.droidsonroids.gif.GifImageView
+                <ProgressBar
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:id="@+id/buffer_loader"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/loader"
-                    android:layout_centerInParent="true"/>
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_gravity="center"
+                    android:indeterminateDrawable="@drawable/circular_loader_2"
+                    android:max="100"
+                    android:progress="20"/>
                 <ImageButton
                     android:id="@+id/playerControlButton"
                     android:layout_width="70dp"
@@ -86,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                style="@style/PlayerTextShadowEffects"/>
+                style="@style/TextShadowEffects"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/warning_layout"
@@ -99,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                style="@style/WarningTextShadowEffects"/>
+                style="@style/TextShadowEffects"/>
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"

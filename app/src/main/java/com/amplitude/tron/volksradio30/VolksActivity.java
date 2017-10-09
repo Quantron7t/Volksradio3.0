@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -24,6 +23,7 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -40,13 +40,12 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
     ImageButton volksPlayerButton;
     TextView volksPlayerText,volksRadioLocation,volksRadioName,staticThumbOne,staticThumbTwo;
     LinearLayout volksWarningLayout,volksPlayerTimer;
-    GifImageView volksBufferLoader;
+    ProgressBar volksBufferLoader;
     LinearLayout popup_layout_button;
     Chronometer volksChronometer;
     ImageView volksRadioArt;
     long time;
     long timeWhenStopped=0;
-    CountDownTimer cTimer = null;
 
     //UI UPDATE MONITOR
     static Handler handler;
@@ -86,13 +85,9 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
         staticThumbTwo=(TextView) findViewById(R.id.thumbnail_static_text2);
         volksWarningLayout=(LinearLayout) findViewById(R.id.warning_layout);
         volksPlayerTimer=(LinearLayout) findViewById(R.id.player_timer);
-        volksBufferLoader=(GifImageView) findViewById(R.id.buffer_loader);
+        volksBufferLoader=(ProgressBar) findViewById(R.id.buffer_loader);
         volksChronometer =(Chronometer) findViewById(R.id.chronometer);
         volksChronometer.setOnChronometerTickListener(this);
-
-        //BETA TEST 919 922017
-        VolksSysSharedPrefs.setIsBufferingStatus(this.getApplicationContext(),false);
-        VolksSysSharedPrefs.setNowStreamingStatus(this.getApplicationContext(),false);
 
         recurringUIAsyncTask();
         recurringInternetAsyncTask();
@@ -179,7 +174,7 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
                                 volksChronometer.stop();
                                 volksChronometer.setBase(SystemClock.elapsedRealtime());
                                 timeWhenStopped=0;
-                                volksPlayerTimer.setVisibility(View.INVISIBLE);
+
                             }
 
                             if (VolksConnectionConstant.getIsConnectionActive())
@@ -196,7 +191,6 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
                                     volksWarningLayout.setVisibility(View.VISIBLE);
                                     PlayerUIConstant.setIsUIConnectedState(false);
                                     displayWarning();
-                                    volksPlayerText.setText("Push Play");
                                 }
                                 //volksWarningLayout.setVisibility(View.VISIBLE);
 
@@ -213,7 +207,6 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
                                     PlayerUIConstant.setIsUIBufferingState(true);
                                     volksChronometer.stop();
                                     timeWhenStopped = volksChronometer.getBase() - SystemClock.elapsedRealtime();
-                                    bufferStateGuardian();
                                 }
                             }
                             else
@@ -222,11 +215,10 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
                                     volksPlayerButton.setVisibility(View.VISIBLE);
                                     volksBufferLoader.setVisibility(View.INVISIBLE);
                                     PlayerUIConstant.setIsUIBufferingState(false);
-                                    volksPlayerTimer.setVisibility(View.VISIBLE);
                                     volksChronometer.setBase(SystemClock.elapsedRealtime()+timeWhenStopped);
                                     volksChronometer.start();
-                                    //volksPlayerText.setText("Playing Stream");
-                                    killBufferStateGuardian();
+                                    volksPlayerTimer.setVisibility(View.VISIBLE);
+                                    volksPlayerText.setText("Playing Stream");
                                 }
                             }
 
@@ -236,8 +228,6 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
                                     volksPlayerText.setText("Playing Stream");
                                     volksPlayerButton.setImageResource(R.mipmap.volks_stop_icon);
                                     PlayerUIConstant.setIsUIPlayingState(true);
-                                    volksChronometer.setBase(SystemClock.elapsedRealtime()+timeWhenStopped);
-                                    volksChronometer.start();
                                 }
                             }
                             else
@@ -245,8 +235,7 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
                                 if (PlayerUIConstant.getIsUIPlayingState()) {
                                     volksPlayerText.setText("Push Play");
                                     volksPlayerButton.setImageResource(R.mipmap.volks_play_icon);
-                                    PlayerUIConstant.setIsUIPlayingState(false);
-                                    volksChronometer.setBase(SystemClock.elapsedRealtime());
+                                    PlayerUIConstant.setIsUIPlayingState(false);volksChronometer.setBase(SystemClock.elapsedRealtime());
                                     timeWhenStopped=0;
                                     volksChronometer.stop();
                                     volksPlayerTimer.setVisibility(View.INVISIBLE);
@@ -357,12 +346,13 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
             VolksMediaConstant.setIsStreamBuffering(true);
             volksBufferLoader.setVisibility(View.VISIBLE);
             volksPlayerButton.setVisibility(View.INVISIBLE);
-            //volksPlayerText.setText("Buffering");
+            volksPlayerText.setText("Buffering");
         }
         else
         {
             volksBufferLoader.setVisibility(View.INVISIBLE);
             volksPlayerButton.setVisibility(View.VISIBLE);
+
             VolksMediaConstant.setIsStreamBuffering(false);
             if (isServiceRunning(VolksPlayerService.class)&&VolksSysSharedPrefs.getNowStreamingStatus(getApplicationContext())) {
                 volksPlayerText.setText("Playing Stream");
@@ -429,7 +419,7 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
 
     @Override
     public void onStop(){
-        //timer.cancel();
+        timer.cancel();
         timer2.cancel();
         Runtime.getRuntime().gc();
         super.onStop();
@@ -501,33 +491,4 @@ public class VolksActivity extends AppCompatActivity implements Chronometer.OnCh
             mIsBackVisible = false;
         }
     }
-
-    //BUFFER GUARDIAN
-    void bufferStateGuardian() {
-        cTimer = new CountDownTimer(20000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                if (millisUntilFinished>13000){
-                    volksPlayerText.setText("Buffering");
-                }
-                else if (millisUntilFinished<13000){
-                    volksPlayerText.setText("Attempting to reconnect");
-                }
-                else if (millisUntilFinished<5000)
-                {
-                    volksPlayerText.setText("I m done");
-                }
-            }
-            public void onFinish() {
-                volksPlayerText.setText("Life is getting Harder!");
-            }
-        };
-        cTimer.start();
-    }
-
-    void killBufferStateGuardian() {
-        if(cTimer!=null)
-            cTimer.cancel();
-        volksPlayerText.setText("Playing Stream");
-    }
-
 }

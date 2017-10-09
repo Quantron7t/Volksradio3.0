@@ -123,7 +123,7 @@ public class RadioDataWDR {
         ar.add("http://funkhaus-europa.akacast.akamaistream.net/7/264/119440/v1/gnl.akacast.akamaistream.net/funkhaus-europa");
         ar.add("Cologne, Germany");
         ar.add("stream_wdr_funkhaus_europa");
-        ar.add("http://i.imgur.com/5sopzjs.png");
+        ar.add("http://i.imgur.com/wnTgZc2.png");
         new NowStreamingRadio().setRadioSharedPreference(context,ar);
         clearArrayData();
     }

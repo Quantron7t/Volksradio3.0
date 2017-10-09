@@ -328,7 +328,6 @@ public class VolksPlayerService extends Service implements MediaPlayer.OnPrepare
     @Override
     public void onDestroy(){
 
-        //callback.onStop();
         volksMediaPlayer.release();
         super.onDestroy();
     }
